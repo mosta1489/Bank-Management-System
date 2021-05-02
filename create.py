@@ -4,6 +4,7 @@ from random import *
 import string
 import random
 import json
+import datetime
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 db = sqlite3.connect("data.db")
@@ -85,7 +86,7 @@ def create():
                 """)
 
                 print("1- I agree \n2- exit")
-                m = int(input("Enter choise"))
+                m = int(input("Enter choise : "))
                 if m != 1:  error
 
                 the_type = "Saving"
@@ -101,9 +102,35 @@ def create():
             print("\n Do you want to deposit an amount of money in your account?")
             print("1- Yes \n2- Not now")
             deposit = int(input("Enter choise : "))
-            #-----------------------------------------------------
+            #-------------------------------------------------------------------------
             if deposit == 1: # add money
                 money = int(input("Enter the amount of money as integer number : "))
+
+                if money != 0:
+                    the_date = datetime.datetime.now()
+                    date_time= the_date.strftime("%d/%B/%Y") + " at " + the_date.strftime("%I:%M %p")
+
+                    #-----------------------------------------------------------------
+
+                    open_json_r = open("history.json","r")
+                    data = json.load(open_json_r)
+
+                    data[str(ID_acc)] = {}
+                    #--------------------first key in dictionary acc_ID will be history --------------------
+                    data[str(ID_acc)]["history"] = [f"added {money}$ at {date_time}"]
+
+                    #----------------get the time that add mony to be calaculate the time that will be added the profits----------------
+                    
+                    month = int(the_date.strftime("%-m"))
+                    day = int(the_date.strftime("%-d"))
+                    total_minutes = int(the_date.strftime("%-I"))*60 + int(the_date.strftime("%-M"))  # this to calculate the time that will added profits after it
+                    
+                    #--------------------second key in dictionary acc_ID will be time and date of deposit --------------------
+                    data[str(ID_acc)]["date_time"] = [month, day,total_minutes]
+                    
+                    open_json_w = open("history.json","w")
+                    json.dump(data,open_json_w,indent = 2)
+
             #-------------------------------------------------------
             elif deposit == 2: money = 0
             #--------------------------------------------------------------------
@@ -112,7 +139,7 @@ def create():
                 money = 0
             
 
-            cr.execute(f"insert into accounts values('{ID_acc}', '{the_type}','{money}','{0}')")#########
+            cr.execute(f"insert into accounts values('{ID_acc}', '{the_type}','{money}','{0}')")
 
             #===================================================================================================================
             cr.execute(f"insert into customers values('{ID}', '{fullname}', '{phone}', '{user}','{passw}','{ID_acc}')")
@@ -133,7 +160,7 @@ def create():
     except:
         print("-"*50)
         print("-"*50)
-        print("there is an error in you data. try again")
+        print("there is an error.please try again")
         print(".\n"*3)
 
         create()
