@@ -10,33 +10,79 @@ def commit_close():
 
 
 def login():
-    user_input = str(input("User Name : "))
-    password_input = str(input("Password : "))
+    try:
+        os.system('clear')
+        print("-"*50)
+        time.sleep(1)
+        
+        user_input = str(input("User Name : "))
 
-    cr.execute("select user_name from customers")
-    users = cr.fetchall()
+        cr.execute("select user_name from customers")
+        users = cr.fetchall()
+        lenth = len(users)
 
-    lenth = len(users)
-    i = 0
-    while i < lenth:
-        if user_input == users[i][0]:
+        i = 0
+        while i < lenth:
+            if user_input == users[i][0]:
+                time.sleep(1)
+                password_input = str(input("Password : "))
+                cr.execute(f"select password from customers where user_name = '{user_input}'")
+                password_data = cr.fetchone()
 
-            cr.execute(f"select password from customers where user_name = '{user_input}'")
-            password_data = cr.fetchone()
+                for i in range(2):
+                    print(".")
+                    time.sleep(1)
+                if password_input == password_data[0]:
+                    print("Login successful")
+                    print("-" * 50)
+                    time.sleep(1)
+                    return password_data[0]
 
-            if password_input == password_data[0]:
-                print("Login successful")
-            else:
-                print("wrong password")
+                else:
+                    time.sleep(1)
+                    print("wrong password \ntry agian...")
+                    print("-" * 50)
+                    time.sleep(1)
+                    raise
+            i += 1
 
+        else:
+            print("this user is not exist \ntry agian...")
+            print("-"*50)
+            time.sleep(1.5)
+            raise
 
-            break
-        i += 1
+    except:
+        os.system('clear')
+        login()
 
-    else:
-        print("this user is not exist")
+def profile(passw):
+
+    os.system("clear")
+    print("-"*50)
+    for i in range(2):
+        print(".")
+        time.sleep(1)
+
+    cr.execute(f"select * from customers where password = '{passw}'")
+    data = cr.fetchall()
+    print(data)
+
+    print(f"hello {data[0][1]} in our pank \nby this profile you can control in your bank accounts ")
+    print("-"*50)
+
+    print(f"your ID is '{data[0][0]}'")
+    print("-"*50)
+
+    time.sleep(1)
+    print("1- enter to an account \n2- create a new account \n3- edit my profile")
+
 
 
 
 if __name__ == '__main__':
-    login()
+
+    x = login()
+    print(x)
+    if x:
+        profile(x)
