@@ -8,10 +8,10 @@ import time
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-# ===============================  Type of account ============================================
 
 def create_account(id_owner):
 
+    global the_type
     try:
         os.system('clear')
         print("-"*50)
@@ -21,7 +21,7 @@ def create_account(id_owner):
         print("2- Fixed for 2 year the profits value is 25% ")
         print("3- Saving without profits \n")
 
-        typ = int(input("Enter choise : "))
+        typ = int(input("Enter choice : "))
 
         time.sleep(1)
         os.system('clear')
@@ -32,38 +32,37 @@ def create_account(id_owner):
             print(
                 f"""
             In this account the profits of money will added after {typ} year from the date that you will deposit the money
-            After this year, the profits value will be added in you accoun and you can take it.
+            After this year, the profits value will be added in you account and you can take it.
             In the event that you withdrew your money before the year, no profits will be added to the money
-            After this year the profits adding will be stoped, you can renew your deposit
+            After this year the profits adding will be stop, you can renew your deposit
             """)
             
             print("1- I agree \n2- exit")
-            m = int(input("Enter choise : "))
+            m = int(input("Enter choice : "))
             if m == 1: 
                 if typ == 1: the_type = "Fixed 1 year"
                 elif typ == 2: the_type = "Fixed 2 year"
 
             elif m == 2:  return 0
             
-            else: error
+            else: raise
             
         elif typ == 3:
-            print(
-            f"""
+            print("""
             In this account you will save your money without profits.
             You can add or withdrew money any time from any ATM 
             """)
 
             print("1- I agree \n2- exit")
-            m = int(input("Enter choise : "))
+            m = int(input("Enter choice : "))
             if m == 1:
                 the_type = "Saving"
 
             elif m == 2:  return 0
 
-            else: error
+            else: raise
 
-        else : error
+        else : raise
 
         ID_acc = random.randrange(10000)  # ID of account will be added in data base
 
@@ -75,7 +74,7 @@ def create_account(id_owner):
 
         print("\n Do you want to deposit an amount of money in your account?")
         print("1- Yes \n2- Not now")
-        deposit = int(input("Enter choise : "))
+        deposit = int(input("Enter choice : "))
 
         time.sleep(1)
         os.system('clear')
@@ -100,7 +99,7 @@ def create_account(id_owner):
                 #--------------------first key in dictionary acc_ID will be history --------------------
                 data[str(ID_acc)]["history"] = [f"added {money}$ at {date_time}"]
 
-                #----------------get the time that add mony to be calaculate the time that will be added the profits----------------
+                #----------------get the time that add money to be calculates the time that will be added the profits----------------
                 
                 month = int(the_date.strftime("%-m"))
                 day = int(the_date.strftime("%-d"))
@@ -140,7 +139,7 @@ def create_account(id_owner):
         print("done")
         print("creating account has been successfully")
 
-    except :
+    except:
 
         os.system('clear')
         print("-"*50)
@@ -157,4 +156,3 @@ if __name__ == "__main__":
 
     x = int(input(" : "))
     create_account(x)
-

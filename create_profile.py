@@ -13,6 +13,7 @@ def commit():
 
 def create():
 
+    global create
     os.system('clear')
     print("-"*50)
 
@@ -34,21 +35,21 @@ def create():
         cr.execute("select id from customers")
         Ids = cr.fetchall() # select all ids from row
 
-        lenth = len(Ids)
+        length = len(Ids)
         i = 0
-        while i < lenth:               # check if input id is exist in row
+        while i < length:               # check if input id is exist in row
             if ID == (Ids[i][0]):     # Ith tuple in list and 0th in the tuple (the value of id)
                 print ("this ID is already exist. please make sure from your ID")
                 print ("-"*50)
 
-                error 
-                # ^^^ this is deliberated error to exite from the function and move to except and call function from beginning  
+                raise
+                # ^^^ this is deliberated error to exited from the function and move to except and call function from beginning
 
             i += 1
         #--------------------------------------------------------------------
         else:
             fullname = str(input("Enter your name \n\n>>> "))
-            user = ''.join(fullname[:3]) + ''.join(str(random.randrange(1000)))  # creare randome user name by first 3 character of name
+            user = ''.join(fullname[:3]) + ''.join(str(random.randrange(1000)))  # create random user name by first 3 character of name
             
             time.sleep(1)
             os.system('clear')
@@ -80,7 +81,7 @@ def create():
 
         print(
             f"""
-        hello {fullname} the registering has been succesfully
+        hello {fullname} the registering has been successful
         
         your user_name is >> {user}
         
@@ -95,7 +96,7 @@ def create():
 
         print("do you need create an account now?")
         print("1- Yes \n2- Not now")
-        create = int(input("Enter choise : "))
+        create = int(input("Enter choice : "))
 
         time.sleep(1)
         os.system('clear')
