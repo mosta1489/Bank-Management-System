@@ -9,10 +9,54 @@ def commit_close():
     db.close()
 
 def use_account():
-    pass
+
+    os.system("clear")
+    print("-"*50)
+
+    acc_ID = int(input("Enter the account ID: "))
+
+    try:  # this to check if ID is exist or not , if not not exist will be print error and move to main except
+        cr.execute(f"select * from accounts where ID_acc = '{acc_ID}'")
+        time.sleep(1)
+        acc_data = cr.fetchall()
+
+        for i in range(2):
+            print(".")
+            time.sleep(1)
+
+        os.system("clear")
+        print("-" * 50)
+
+        print("\n1- withdrawal \n2- deposit \n3- transfer \n"
+              "4- show details of account \n5- show history \n6- delete the account")
+
+        transaction = int(input("Enter choice: "))
+        time.sleep(1)
+
+        if transaction == 1: print("withdrawal")
+        elif transaction == 2: print("deposit")
+        elif transaction == 3: print("transfer")
+        elif transaction == 4: print("show details of account")
+        elif transaction == 5: print("show history")
+        elif transaction == 6: print(" delete the account")
+
+
+
+    except:
+        print("this ID is not exist \n1- try agian \n2- exit")
+        try_again = int(input(">>: "))
+        if try_again == 1 : use_account()
+        else: raise
+        time.sleep(1)
+
+
+
+
+
+
 
 def edit_profile():
-    pass
+    print("edit function")
 
 
 def login():
@@ -75,14 +119,16 @@ def profile():
         for i in range(2):
             print(".")
             time.sleep(1)
-
-        cr.execute(f"select * from customers where user_name = '{user_input}'")
+        x = 'mso238'
+        cr.execute(f"select * from customers where user_name = '{x}'")
         data = cr.fetchall()
         name = data[0][1].split()
         print(f"hello {name[0]} in our bank \nby this profile you can control in your bank accounts ")
         print("-"*50)
 
-        print(f"your ID is '{data[0][0]}'")
+        ID_owner = data[0][0]
+
+        print(f"your ID is '{ID_owner}'")
         print("-"*50)
 
         time.sleep(1)
@@ -91,28 +137,10 @@ def profile():
 
         if choice == 1:   # enter to an account
             time.sleep(1)
-            os.system("clear")
-            print("-"*50)
-            acc_ID = int(input("Enter the account ID: "))
-
-            try:   # this to check if ID is exist or not , if not not exist will be print error and move to main except
-                cr.execute(f"select * from account where ID_acc = '{acc_ID}'")
-                acc_data = cr.fetchall()
-
-                time.sleep(1)
-                use_account()
-
-
-            except:
-                print("this ID is not exist. try again..")
-                time.sleep(1)
-                raise
-
-
             use_account()
 
         elif choice == 2:
-            create_account()
+            create_account(ID_owner)
 
         elif choice == 2:
             edit_profile()
@@ -129,5 +157,5 @@ def profile():
 
 if __name__ == '__main__':
 
-    if login():
-        profile()
+    # if login():
+    profile()
