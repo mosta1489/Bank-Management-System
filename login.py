@@ -9,7 +9,7 @@ def commit_close():
     db.close()
 
 
-#=========================================---start withdrawal ---=======================================================
+#================================ ---start withdrawal ---===============================================================
 
 def withdrawal(ID_account):
     global withdrawal_input
@@ -107,8 +107,7 @@ def withdrawal(ID_account):
 
 #================================ ---end withdrawal ---=================================================================
 
-
-#================================ ---end add_profits ---=================================================================
+#================================ ---end add_profits ---================================================================
 
 def add_profits(ID_account):
 
@@ -148,10 +147,9 @@ def add_profits(ID_account):
         cr.execute(f"update accounts set profits = {the_profits} where ID_acc = {ID_account}")
         commit_close()
 
-# ================================ ---end add_profits ---=================================================================
+# ================================ ---end add_profits ---===============================================================
 
-
-# ================================ ---start show details of account ---=================================================================
+# ================================ ---start show details of account ---=================================================
 
 def show_details(ID_account):
     os.system("clear")
@@ -192,23 +190,43 @@ def show_details(ID_account):
     if inp:
         raise Exception
 
-# ================================ ---end show details of account ---=================================================================
+# ================================ ---end show details of account ---===================================================
 
+# ================================ --- start show_history ---===========================================================
 
-# ================================ ---start use_account ---=================================================================
+def show_history(ID_account):
+    time.sleep(1)
+    os.system("clear")
+    print("-"*50)
+    time.sleep(1)
+
+    history_data = json.load(open("history.json", "r"))
+    
+    print_data = history_data[str(ID_account)]["history"]
+
+    print(" Transactions history \n")
+    time.sleep(1)
+    for i in print_data:
+        print(f">> {i}\n")
+        time.sleep(1)
+
+# ================================ --- end show_history ---=============================================================
+
+# ================================ ---start use_account ---=============================================================
 
 def use_account(owner_ID):
 
     os.system("clear")
     print("-"*50)
 
-
     try:
 
         acc_ID_input = int(input("Enter the account ID: "))
 
-        cr.execute(f"select ID_acc from accounts where owner = '{owner_ID}'")
-        IDs = cr.fetchall()
+        db2 = sqlite3.connect("data.db")
+        cr2 = db2.cursor()
+        cr2.execute(f"select ID_acc from accounts where owner = '{owner_ID}'")
+        IDs = cr2.fetchall()
         length = len(IDs)
         i = 0
         while i < length:
@@ -222,9 +240,9 @@ def use_account(owner_ID):
 
         add_profits(acc_ID_input)
 
-        cr.execute(f"select * from accounts where ID_acc = '{acc_ID_input}'")
-        time.sleep(1)
-        acc_data = cr.fetchall()
+        cr2.execute(f"select * from accounts where ID_acc = '{acc_ID_input}'")
+        acc_data = cr2.fetchall()
+
         for i in range(2):
             print(".")
             time.sleep(1)
@@ -243,8 +261,8 @@ def use_account(owner_ID):
         if transaction == 1: withdrawal(acc_ID_input)
         elif transaction == 2: print("deposit")
         elif transaction == 3: print("transfer")
-        elif transaction == 4: print("show details of account")
-        elif transaction == 5: print("show history")
+        elif transaction == 4: show_details(acc_ID_input)
+        elif transaction == 5: show_history(acc_ID_input)
         elif transaction == 6: print(" delete the account")
         else: raise
 
@@ -261,18 +279,16 @@ def use_account(owner_ID):
             time.sleep(1)
         else: raise Exception
 
-#================================ ---end use_account ---=================================================================
+#================================ ---end use_account ---================================================================
 
-
-#================================ ---start edit_profile ---=================================================================
+#================================ ---start edit_profile ---=============================================================
 
 def edit_profile():
     print("edit function")
 
-#================================ ---end edit_profile ---=================================================================
+#================================ ---end edit_profile ---===============================================================
 
-
-#================================ ---start profile ---=================================================================
+#================================ ---start profile ---==================================================================
 
 def profile():
     try:
@@ -326,10 +342,9 @@ def profile():
             time.sleep(1)
         else: raise Exception
 
-#================================ ---end profile ---=================================================================
+#================================ ---end profile ---====================================================================
 
-
-#================================ ---start login ---=================================================================
+#================================ ---start login ---====================================================================
 
 def login():
     try:
@@ -394,14 +409,15 @@ def login():
             time.sleep(1)
         else: raise Exception
 
-#================================ ---end login ---=================================================================
+#================================ ---end login ---======================================================================
 
 
 if __name__ == '__main__':
     pass
-    # login()
+    login()
     # profile()
     # use_account(500)
     # withdrawal(1450)
     # show_details(1450)
     # add_profits(2301)
+    # show_history(259)
