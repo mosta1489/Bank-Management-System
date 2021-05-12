@@ -28,7 +28,7 @@ def withdrawal(ID_account):
             print("1- continue \n2- exit")
             choice = input("Enter choice: ")
 
-            if choice != "1" : raise Exception
+            if choice != "1" : raise
 
             time.sleep(1)
             os.system("clear")
@@ -37,7 +37,7 @@ def withdrawal(ID_account):
             print("All money will be withdrawn from the account now\n1- continue \n2- exit")
             choice = input("Enter choice: ")
 
-            if choice != "1": raise Exception
+            if choice != "1": raise
             for _ in range(2):
                 print(".")
                 time.sleep(1)
@@ -58,7 +58,8 @@ def withdrawal(ID_account):
 
         elif acc_data[0][1] == "Saving":
             withdrawal_input = int(input("Enter the amount of money that you need to withdrawal: \n>>> "))
-            if withdrawal_input < acc_data[0][2]:
+
+            if withdrawal_input != 0 and withdrawal_input < acc_data[0][2]:
                 time.sleep(1)
                 os.system("clear")
                 print("-" * 50)
@@ -77,7 +78,8 @@ def withdrawal(ID_account):
                     print(".")
                     time.sleep(1)
                 print("This amount cannot be withdrawn.\n")
-                raise Exception
+                time.sleep(1)
+                raise
         #------------------------- add history in json file ----------------------------------------
         the_date = datetime.datetime.now()
         date_time = the_date.strftime("%d/%B/%Y") + " at " + the_date.strftime("%I:%M %p")
@@ -94,19 +96,103 @@ def withdrawal(ID_account):
         print("done")
 
 
-    except ValueError:
-        print("failed. try again..")
-        time.sleep(1)
-        for _ in range(2):
-            print(".")
+    except:
+        os.system("clear")
+        print("1- try again \n0- back")
+        choice = input(">>>: ")
+        if choice == "1":
+            withdrawal(ID_account)
             time.sleep(1)
-        raise
-
-    except Exception:
-        time.sleep(1)
-        raise
+        else: raise Exception
 
 #================================ ---end withdrawal ---=================================================================
+
+
+#================================ ---end add_profits ---=================================================================
+
+def add_profits(ID_account):
+
+    cr.execute(f"select * from accounts where ID_acc = {ID_account}")
+    data_acc = cr.fetchall()
+    type = data_acc[0][1]
+
+
+    if type != "Saving":
+
+        open_js_r = open("history.json", "r")
+        date_time = json.load(open_js_r)
+
+        history_date = date_time[str(ID_account)]["date_time"]
+
+        the_date = datetime.datetime.now()
+
+        month = int(the_date.strftime("%-m"))
+        day = int(the_date.strftime("%-d"))
+        total_minutes = int(the_date.strftime("%-I")) * 60 + int(the_date.strftime("%-M"))
+
+        if month < history_date[0]:
+            if day < history_date[1]:
+                if total_minutes - history_date[2] >= 60:
+                    pass
+                else:
+                    return 0
+
+        money = data_acc[0][2]
+
+        global the_profits
+        if type == "Fixed 1 year":
+            the_profits = money * .1
+        elif type == "Fixed 2 year":
+            the_profits = money * 2.5
+
+        cr.execute(f"update accounts set profits = {the_profits} where ID_acc = {ID_account}")
+        commit_close()
+
+# ================================ ---end add_profits ---=================================================================
+
+
+# ================================ ---start show details of account ---=================================================================
+
+def show_details(ID_account):
+    os.system("clear")
+    print("-"*50)
+    print("wait...")
+    time.sleep(1)
+    for _ in range(2):
+        print(".")
+        time.sleep(1)
+    os.system("clear")
+    print("-"*50)
+
+    cr.execute(f"select * from accounts where ID_acc = {ID_account}")
+    data_base = cr.fetchall()
+    print(f"the ID of account is >>> {ID_account}")
+    print("-"*50)
+    time.sleep(1)
+
+    print(f"the ID of owner of this account is >>> {data_base[0][4]}")
+    print("-"*50)
+    time.sleep(1)
+
+    print(f" the type of account is >>> {data_base[0][1]}")
+    print("-"*50)
+    time.sleep(1)
+
+    print(f" you have>>> {data_base[0][2]}$ in this account")
+    if data_base[0][1] != "Saving":
+        profits = data_base[0][3]
+        if profits == 0:
+            print("profits have not been added yet")
+        else:
+            print(f"the profits of account is >>> {profits}")
+    print("-"*50)
+    time.sleep(1)
+    
+    inp = input("press any key to back:  ")
+    if inp:
+        raise Exception
+
+# ================================ ---end show details of account ---=================================================================
 
 
 # ================================ ---start use_account ---=================================================================
@@ -117,7 +203,7 @@ def use_account(owner_ID):
     print("-"*50)
 
 
-    try:  # this to check if ID is exist or not , if not not exist will be print error and move to main except
+    try:
 
         acc_ID_input = int(input("Enter the account ID: "))
 
@@ -130,9 +216,11 @@ def use_account(owner_ID):
                 break
             i += 1
         else:
-            print("You do not have an account with this ID")
+            print("\nYou do not have an account with this ID")
+            time.sleep(1)
             raise
 
+        add_profits(acc_ID_input)
 
         cr.execute(f"select * from accounts where ID_acc = '{acc_ID_input}'")
         time.sleep(1)
@@ -158,17 +246,20 @@ def use_account(owner_ID):
         elif transaction == 4: print("show details of account")
         elif transaction == 5: print("show history")
         elif transaction == 6: print(" delete the account")
+        else: raise
 
 
+    except Exception:
+        use_account(owner_ID)
 
     except:
         os.system("clear")
-        print("1-use account \n2- back")
-        x = input(">>>: ")
-        if x == "1":
+        print("1-try again \n2- back")
+        choice = input(">>>: ")
+        if choice == "1":
             use_account(owner_ID)
             time.sleep(1)
-        else: raise
+        else: raise Exception
 
 #================================ ---end use_account ---=================================================================
 
@@ -221,8 +312,19 @@ def profile():
             time.sleep(1)
             raise
 
-    except:
+
+    except Exception:
+        time.sleep(1)
         profile()
+
+    except:
+        os.system("clear")
+        print("1-try again \n2- back")
+        choice = input(">>>: ")
+        if choice == "1":
+            profile()
+            time.sleep(1)
+        else: raise Exception
 
 #================================ ---end profile ---=================================================================
 
@@ -278,16 +380,28 @@ def login():
                 time.sleep(1)
             raise
 
-    except:
-        os.system('clear')
+
+    except Exception:
+        time.sleep(1)
         login()
+
+    except:
+        os.system("clear")
+        print("1-try again \n2- back")
+        choice = input(">>>: ")
+        if choice == "1":
+            login()
+            time.sleep(1)
+        else: raise Exception
 
 #================================ ---end login ---=================================================================
 
 
 if __name__ == '__main__':
-
-    login()
+    pass
+    # login()
     # profile()
-    # use_account()
+    # use_account(500)
     # withdrawal(1450)
+    # show_details(1450)
+    # add_profits(2301)
