@@ -76,7 +76,7 @@ def create():
         for i in range(3):
             print(". ")
             time.sleep(1)
-        
+
         print("-"*50)
 
         print(

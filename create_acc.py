@@ -43,7 +43,7 @@ def create_account(id_owner):
                 if typ == 1: the_type = "Fixed 1 year"
                 elif typ == 2: the_type = "Fixed 2 year"
 
-            elif m == 2:  return 0
+            elif m == 2: return 0
             
             else: raise
             
@@ -58,7 +58,7 @@ def create_account(id_owner):
             if m == 1:
                 the_type = "Saving"
 
-            elif m == 2:  return 0
+            elif m == 2: return 0
 
             else: raise
 
@@ -88,7 +88,7 @@ def create_account(id_owner):
 
             if money != 0:
                 the_date = datetime.datetime.now()
-                date_time= the_date.strftime("%d/%B/%Y") + " at " + the_date.strftime("%I:%M %p")
+                date_time = the_date.strftime("%d/%B/%Y") + " at " + the_date.strftime("%I:%M %p")
 
                 #-------------------------save history in json file----------------------------------------
 
@@ -106,10 +106,10 @@ def create_account(id_owner):
                 total_minutes = int(the_date.strftime("%-I"))*60 + int(the_date.strftime("%-M"))  # this to calculate the time that will added profits after it
                 
                 #--------------------second key in dictionary acc_ID will be time and date of deposit --------------------
-                data[str(ID_acc)]["date_time"] = [month, day,total_minutes]
+                data[str(ID_acc)]["date_time"] = [month, day, total_minutes]
                 
-                open_json_w = open("history.json","w")
-                json.dump(data,open_json_w,indent = 2)
+                open_json_w = open("history.json", "w")
+                json.dump(data, open_json_w, indent = 2)
 
         #-------------------------------------------------------
         elif deposit == 2: 
@@ -137,7 +137,8 @@ def create_account(id_owner):
         db2.close()
 
         print("done")
-        print("creating account has been successfully")
+        print("creating account has been successfully\n")
+        print(f"the ID of this account is >> {ID_acc} \nyou have {money}$ in your account")
 
     except:
 
